@@ -1,5 +1,3 @@
-obj-m += lkmhello.o
-
 ll:
 	make -C ../../.. M=$(PWD)
 clean: 
