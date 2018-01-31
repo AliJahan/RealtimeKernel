@@ -1,4 +1,3 @@
-obj-m += mod_calc.o
 ll:
 	make -C ../../.. M=$(PWD)
 clean: 

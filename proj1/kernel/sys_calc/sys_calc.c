@@ -7,6 +7,7 @@
 #include <linux/shm.h>
 #include <linux/stat.h>
 #include <linux/syscalls.h>
+#include <asm/syscall.h>
 #include <linux/mman.h>
 #include <linux/fs.h>
 #include <linux/file.h>
@@ -17,6 +18,9 @@
  * system call for a simple calculator
  * <TEAM09/>
  */
+
+EXPORT_SYMBOL(sys_call_table);
+
 SYSCALL_DEFINE4(calc, int, arg1, int, arg2, char, op, int*, result)
 {
   int ret=0;

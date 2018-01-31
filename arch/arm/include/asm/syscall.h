@@ -16,7 +16,7 @@
 
 #define NR_syscalls (__NR_syscalls)
 
-extern const unsigned long sys_call_table[];
+extern unsigned long sys_call_table[];	//<TEAM09/> const has been removed
 
 static inline int syscall_get_nr(struct task_struct *task,
 				 struct pt_regs *regs)

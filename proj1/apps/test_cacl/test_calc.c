@@ -9,7 +9,7 @@ int main(int argc, char* argv[]){
 	int res;
 	
 	if(argc<4){
-		printf("usage:\n ./test_calc arg1 arg2 operator\n operator:\n\t+\tadds arg1 and arg2\n\t-\t subtracts arg1 from arg2\n\t*\tmultiplies arg1 by arg2\n\t/\t divides arg1 to arg2\n");
+		printf("usage:\n ./test_calc arg1 operator arg2\n operator:\n\t+\tadds arg1 and arg2\n\t-\t subtracts arg1 from arg2\n\t*\tmultiplies arg1 by arg2\n\t/\t divides arg1 to arg2\n");
 		return 0;
 	}
 	
