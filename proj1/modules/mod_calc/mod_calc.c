@@ -12,6 +12,10 @@ asmlinkage long (*original_sys_calc)(int,int,char,int*);
 
 asmlinkage long fake_calc_function(int arg1, int arg2, char op, int* result)
 {
+
+    if(arg2==0)
+	    return -1;
+
     *result = arg1 % arg2;
     return 0;
 }
