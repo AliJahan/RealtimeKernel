@@ -30,13 +30,11 @@ SYSCALL_DEFINE3(set_rsv, pid_t, pid, struct timespec* , C, struct timespec*, T){
 
 	if(pid<0)//TODO: Check other scenarios too
 		return -1;
-	printk(KERN_INFO "TEAM:1\n");
+
 	t = find_task_by_pid_ns(pid, &init_pid_ns);
-	printk(KERN_INFO "TEAM:2\n");
 	if(t == NULL){
 		return -1;
 	}
-	printk(KERN_INFO "TEAM:3\n");
-	//printk(KERN_INFO "prio:%d static:%d\n",t->prio, t->static_prio);
+
 	return 0;
 }
