@@ -903,6 +903,6 @@ asmlinkage long sys_pkey_mprotect(unsigned long start, size_t len,
 asmlinkage long sys_pkey_alloc(unsigned long flags, unsigned long init_val);
 asmlinkage long sys_pkey_free(int pkey);
 asmlinkage long set_rsv(pid_t pid, struct timespec *C, struct timespec *T); //<TEAM09/>
-asmlinkage long cancel_rsv(pid t pid);                                      //<TEAM09/>
+asmlinkage long cancel_rsv(pid_t pid);                                      //<TEAM09/>
 
 #endif

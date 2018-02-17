@@ -20,6 +20,23 @@
  */
 
 SYSCALL_DEFINE3(set_rsv, pid_t, pid, struct timespec* , C, struct timespec*, T){
+	struct task_struct* t;
+	//Check validity of the inputs
+	if(C->tv_nsec<0 || C->tv_sec<0)
+		return -1;
 
-	return -1;
+	if(T->tv_nsec<0 || T->tv_sec<0)
+		return -1;
+
+	if(pid<0)//TODO: Check other scenarios too
+		return -1;
+	printk(KERN_INFO "TEAM:1\n");
+	t = find_task_by_pid_ns(pid, &init_pid_ns);
+	printk(KERN_INFO "TEAM:2\n");
+	if(t == NULL){
+		return -1;
+	}
+	printk(KERN_INFO "TEAM:3\n");
+	//printk(KERN_INFO "prio:%d static:%d\n",t->prio, t->static_prio);
+	return 0;
 }
