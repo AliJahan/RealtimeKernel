@@ -917,7 +917,7 @@ export mod_sign_cmd
 
 
 ifeq ($(KBUILD_EXTMOD),)
-core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/ proj1/kernel/sys_calc/ #<TEAM09/>
+core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/ proj1/kernel/sys_calc/ proj2/kernel/sys_set_rsv/ proj1/kernel/sys_cancel_rsv/ #<TEAM09/>
 
 vmlinux-dirs	:= $(patsubst %/,%,$(filter %/, $(init-y) $(init-m) \
 		     $(core-y) $(core-m) $(drivers-y) $(drivers-m) \
