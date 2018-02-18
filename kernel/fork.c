@@ -1723,6 +1723,12 @@ static __latent_entropy struct task_struct *copy_process(
 
 	/* ok, now we should be set up.. */
 	p->pid = pid_nr(pid);
+	//<TEAM09/>+
+	p->C.tv_nsec = 0;
+	p->C.tv_sec = 0;
+	p->T.tv_nsec = 0;
+	p->T.tv_sec = 0;
+	//</TEAM09>
 	if (clone_flags & CLONE_THREAD) {
 		p->exit_signal = -1;
 		p->group_leader = current->group_leader;

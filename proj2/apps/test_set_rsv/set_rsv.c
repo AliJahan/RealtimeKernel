@@ -4,29 +4,38 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 #define set_rsv 397
+#define cancel_rsv 398
 int main(int argc, char* argv[]){
 
 	int pid;
 	struct timespec c;
-	c.tv_nsec = 300;
-	c.tv_sec = 3;
+	c.tv_nsec = 100;
+	c.tv_sec = 1;
 
 	struct timespec t;
-	t.tv_nsec = 500;
-	t.tv_sec = 5;
+	t.tv_nsec = 200;
+	t.tv_sec = 2;
+	int i;
+	printf("my PID:%d\n",getpid());
+	for(i=0;i<100;i++){
+		printf("PID:%d ",i);
+		c.tv_nsec +=i;
+		c.tv_sec +=i;
+		t.tv_nsec +=i;
+		t.tv_sec +=i;
+		int ret = syscall(set_rsv,i,&c,&t);
+		if(ret<0)
+			printf("NaN for %d",i);
+		printf("\n");
+	}
 
-	printf("Enter pid\n");
-	scanf("%d",&pid);
-
-	printf("Result of calling by your PID\n");
-	int ret = syscall(set_rsv,pid,&c,&t);
-	if(ret<0)
-		printf("NaN\n");
-
-	printf("Result of calling by process PID\n");
-	ret = syscall(set_rsv,getpid(),&c,&t);
-	if(ret<0)
-			printf("NaN\n");
-
+	printf("-------------------------\n");
+	for(i=0;i<100;i++){
+		printf("Trying to cancel PID:%d reservation",i);
+		int ret = syscall(cancel_rsv,i);
+		if(ret<0)
+			printf(" -> can not cancel reservation");
+		printf("\n");
+	}
 	return 0;
 }
