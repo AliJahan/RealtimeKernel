@@ -34,10 +34,10 @@ SYSCALL_DEFINE1(cancel_rsv, pid_t, pid){
 	if(t == NULL)
 		return -1;
 
-	if(t->C.tv_nsec == 0 || t->C.tv_sec == 0)
+	if(t->C.tv_nsec == 0 && t->C.tv_sec == 0)
 		return -1;
 
-	if(t->T.tv_nsec == 0 || t->T.tv_sec == 0)
+	if(t->T.tv_nsec == 0 && t->T.tv_sec == 0)
 		return -1;
 
 	//TODO: timer stuff here

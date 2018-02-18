@@ -23,10 +23,10 @@ SYSCALL_DEFINE3(set_rsv, pid_t, pid, struct timespec* , C, struct timespec*, T){
 	struct task_struct* t;
 	pid_t tmp_pid;
 	//Check validity of the inputs
-	if(C->tv_nsec<=0 || C->tv_sec<=0)
+	if(C->tv_nsec<=0 && C->tv_sec<=0)
 		return -1;
 
-	if(T->tv_nsec<=0 || T->tv_sec<=0)
+	if(T->tv_nsec<=0 && T->tv_sec<=0)
 		return -1;
 
 	if(pid<0)//TODO: Check other scenarios too
@@ -43,10 +43,10 @@ SYSCALL_DEFINE3(set_rsv, pid_t, pid, struct timespec* , C, struct timespec*, T){
 		return -1;
 	}
 	//set C and T
-	t->C.tv_nsec = C->tv_nsec;
-	t->C.tv_sec = C->tv_sec;
-	t->T.tv_nsec = T->tv_nsec;
-	t->T.tv_sec = T->tv_sec;
+	t->C.tv_nsec = (C->tv_nsec!=0) ? (C->tv_nsec) : (C->tv_sec*1000000000);
+	t->C.tv_sec = (C->tv_sec!=0) ? (C->tv_sec) : (C->tv_nsec/1000000000);
+	t->T.tv_nsec = (T->tv_nsec!=0) ? (T->tv_nsec) : (T->tv_sec*1000000000);
+	t->T.tv_sec = (T->tv_sec!=0) ? (T->tv_sec) : (T->tv_nsec/1000000000);
 	//TODO: timer stuff
 	printk(KERN_INFO "<TEAM09> PID: %d has reserved C:%d T:%d \n",(int) tmp_pid, (int)t->C.tv_nsec,(int)t->T.tv_nsec);
 	return 0;
