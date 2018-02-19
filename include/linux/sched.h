@@ -1605,9 +1605,14 @@ struct task_struct {
 
 	pid_t pid;
 	pid_t tgid;
-	struct timespec C;  	//<TEAM09/>+
-    struct timespec T;      //<TEAM09/>+
-    struct hrtimer timer;   //<TEAM09/>+
+	//<TEAM09/>
+	struct timespec C;
+    struct timespec T;
+    struct hrtimer timer;
+    struct timespec exec_time;
+    struct timespec time_stamp;
+    atomic_t reset;
+    //</TEAM09>+
 
 #ifdef CONFIG_CC_STACKPROTECTOR
 	/* Canary value for the -fstack-protector gcc feature */

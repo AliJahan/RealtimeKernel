@@ -29,8 +29,8 @@ void *set_res(void* input_t)
 
 
     struct timespec c;
-    c.tv_nsec = 2000000000;
-    c.tv_sec = 2;
+    c.tv_nsec = 8000;
+    c.tv_sec = 0;
 
     struct timespec t;
     t.tv_nsec = 2000000000;
@@ -79,6 +79,7 @@ void *set_res(void* input_t)
     gettimeofday(&now, NULL);
 
     while (1) {
+       for(volatile int i=0;i<10;i++);
        gettimeofday(&now,NULL);
        int ret = syscall(wait_until_next_period);
        gettimeofday(&then,NULL);

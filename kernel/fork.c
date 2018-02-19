@@ -1732,6 +1732,11 @@ static __latent_entropy struct task_struct *copy_process(
 	p->C.tv_sec = 0;
 	p->T.tv_nsec = 0;
 	p->T.tv_sec = 0;
+	p->exec_time.tv_nsec = 0;
+	p->exec_time.tv_sec = 0;
+    p->time_stamp.tv_nsec = 0;
+    p->time_stamp.tv_sec = 0;
+    atomic_set(&p->reset,0);
 	//</TEAM09>
 	if (clone_flags & CLONE_THREAD) {
 		p->exit_signal = -1;

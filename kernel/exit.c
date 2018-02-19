@@ -731,11 +731,6 @@ void __noreturn do_exit(long code)
 	int group_dead;
 	//<TEAM09/>
 	if(tsk->C.tv_sec !=0 || tsk->C.tv_nsec !=0 || tsk->T.tv_sec !=0 || tsk->T.tv_nsec !=0 ){
-	    //Reset variables
-	    tsk->T.tv_nsec = 0;
-	    tsk->T.tv_sec = 0;
-	    tsk->C.tv_nsec = 0;
-	    tsk->C.tv_sec = 0;
 	    //Cancel timer
 	    hrtimer_cancel(&tsk->timer);
 	    printk(KERN_INFO "<TEAM09>: Reservation for PID %d has been canceled in EXIT()\n",(int)tsk->pid);
