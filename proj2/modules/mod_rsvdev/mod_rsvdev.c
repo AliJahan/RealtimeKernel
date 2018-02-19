@@ -6,7 +6,7 @@
 #define  CLASS_NAME  "TEAM09"     ///< The device class -- this is a character device driver
 
 MODULE_LICENSE("GPL"); 
-MODULE_AUTHOR("team09");    
+MODULE_AUTHOR("TEAM09");
 MODULE_DESCRIPTION("This module outputs a list of tasks having active reservations");
 
 static int    majorNumber;
@@ -33,29 +33,29 @@ static int __init rsvdev_init(void){
     // Try to dynamically allocate a major number for the device -- more difficult but worth it
     majorNumber = register_chrdev(0, DEVICE_NAME, &fops);
     if (majorNumber<0){
-        printk(KERN_ALERT "rsvdev failed to register a major number\n");
+        printk(KERN_ALERT "TEAM09: failed to register a major number\n");
         return majorNumber;
     }
-    printk(KERN_INFO "rsvdev: registered correctly with major number %d\n", majorNumber);
+    printk(KERN_INFO "TEAM09: registered correctly with major number %d\n", majorNumber);
 
     // Register the device class
     rsvdevClass = class_create(THIS_MODULE, CLASS_NAME);
     if (IS_ERR(rsvdevClass)){                // Check for error and clean up if there is
         unregister_chrdev(majorNumber, DEVICE_NAME);
-        printk(KERN_ALERT "Failed to register device class\n");
+        printk(KERN_ALERT "TEAM09: Failed to register device class\n");
         return PTR_ERR(rsvdevClass);          // Correct way to return an error on a pointer
     }
-    printk(KERN_INFO "rsvdev: device class registered correctly\n");
+    printk(KERN_INFO "TEAM09: device class registered correctly\n");
 
     // Register the device driver
     rsvdevDevice = device_create(rsvdevClass, NULL, MKDEV(majorNumber, 0), NULL, DEVICE_NAME);
     if (IS_ERR(rsvdevDevice)){               // Clean up if there is an error
         class_destroy(rsvdevClass);           // Repeated code but the alternative is goto statements
         unregister_chrdev(majorNumber, DEVICE_NAME);
-        printk(KERN_ALERT "Failed to create the device\n");
+        printk(KERN_ALERT "TEAM09: Failed to create the device\n");
         return PTR_ERR(rsvdevDevice);
     }
-    printk(KERN_INFO "rsvdev: device class created correctly\n"); // Made it! device was initialized
+    printk(KERN_INFO "TEAM09: device class created correctly\n"); // Made it! device was initialized
     return 0;
 }
 
@@ -65,7 +65,7 @@ static void __exit rsvdev_exit(void){
     class_unregister(rsvdevClass);                          // unregister the device class
     class_destroy(rsvdevClass);                             // remove the device class
     unregister_chrdev(majorNumber, DEVICE_NAME);             // unregister the major number
-    printk(KERN_INFO "rsvdev: Goodbye from the LKM!\n");
+    printk(KERN_INFO "TEAM09: Goodbye from the LKM!\n");
 }
 
 
@@ -78,7 +78,7 @@ static int dev_open(struct inode *inodep, struct file *filep){
 
 static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset){
 
-    static char message[10240];
+    static char message[102400];
     int  size_of_message;
     struct task_struct *g, *p;
     char tempString[100];

@@ -22,7 +22,7 @@
 SYSCALL_DEFINE1(cancel_rsv, pid_t, pid){
 	struct task_struct* t;
 	pid_t tmp_pid;
-	if(pid<0)//TODO: Check other scenarios too
+	if(pid<0)
 		return -1;
 
 	//check for pid=0
@@ -40,14 +40,15 @@ SYSCALL_DEFINE1(cancel_rsv, pid_t, pid){
 	if(t->T.tv_nsec == 0 && t->T.tv_sec == 0)
 		return -1;
 
-	//TODO: timer stuff here
-	//C
+	//set C
 	t->C.tv_nsec = 0;
 	t->C.tv_sec = 0;
-	//T
+	//set T
 	t->T.tv_nsec = 0;
 	t->T.tv_sec = 0;
+	//Cancel timer
+    hrtimer_cancel(&t->timer);
 
-	printk(KERN_INFO "<TEAM09> Reservation for PID: %d has been canceled\n",(int) tmp_pid);
+	printk(KERN_INFO "<TEAM09>: Reservation for PID %d has been canceled in CANCEL_RSV\n",(int) tmp_pid);
 	return 0;
 }
