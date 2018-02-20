@@ -22,6 +22,14 @@
 SYSCALL_DEFINE1(cancel_rsv, pid_t, pid){
 	struct task_struct* t;
 	pid_t tmp_pid;
+
+
+    struct task_struct* g;
+    struct task_struct* p;
+
+    struct sched_param param;
+    short decrease_others = 1;
+
 	if(pid<0)
 		return -1;
 
@@ -40,6 +48,26 @@ SYSCALL_DEFINE1(cancel_rsv, pid_t, pid){
 	if(t->T.tv_nsec == 0 && t->T.tv_sec == 0)
 		return -1;
 
+
+	//Reset Priority
+	for_each_process_thread(g, p){
+	    if ((p != t) && ((p->T.tv_nsec > 0) || (p->T.tv_sec > 0))){
+	        if (((t->T.tv_sec == p->T.tv_sec) && (t->T.tv_nsec == p->T.tv_nsec)))
+	            decrease_others = 0;
+	    }
+	}
+
+	if (decrease_others==1){
+	    for_each_process_thread(g, p){
+	        if ((p->T.tv_nsec > 0) || (p->T.tv_sec > 0))
+	        {
+	            if(t->rt_priority < p->rt_priority){
+	                param.sched_priority = p->rt_priority - 1;
+	                sched_setscheduler(p,SCHED_FIFO,&param);
+	            }
+	        }
+	    }
+	}
 	//set C
 	t->C.tv_nsec = 0;
 	t->C.tv_sec = 0;

@@ -63,10 +63,19 @@ enum hrtimer_restart wake_upp(struct hrtimer *timer)
 
     return HRTIMER_RESTART;
 }
-
 SYSCALL_DEFINE3(set_rsv, pid_t, pid, struct timespec* , C, struct timespec*, T){
     struct task_struct* task_ptr;
+    struct task_struct* g;
+    struct task_struct* p;
     pid_t tmp_pid;
+
+
+    struct sched_param param;//
+    unsigned int min_prio = 100;//
+    unsigned int max_prio = 0;//
+    short increase_others = 1;
+
+
 
     // Checking validity of the inputs
     if((C->tv_nsec==0 && C->tv_sec==0) || (C->tv_nsec<0 || C->tv_sec<0))
@@ -90,11 +99,44 @@ SYSCALL_DEFINE3(set_rsv, pid_t, pid, struct timespec* , C, struct timespec*, T){
     if(task_ptr == NULL){
         return -1;
     }
+
+
+    for_each_process_thread(g, p){
+        if ((p->T.tv_nsec > 0) || (p->T.tv_sec > 0)){
+            if (((T->tv_sec == p->T.tv_sec) && (T->tv_nsec == p->T.tv_nsec))){
+                min_prio = p->rt_priority;
+                increase_others = 0;
+            }
+        }
+    }
+    if (increase_others == 1){
+        for_each_process_thread(g, p){
+            if ((p->T.tv_nsec > 0) || (p->T.tv_sec > 0))
+            {
+                if(max_prio < p->rt_priority)
+                    max_prio = p->rt_priority;
+                if ((T->tv_sec < p->T.tv_sec) || ((T->tv_sec == p->T.tv_sec) && (T->tv_nsec < p->T.tv_nsec))){
+                    if(min_prio > p->rt_priority)
+                        min_prio = p->rt_priority;
+                    param.sched_priority = p->rt_priority + 1;
+                    sched_setscheduler(p,SCHED_FIFO,&param);
+                }
+            }
+        }
+    }
+
+    if(min_prio==100)
+        param.sched_priority = max_prio + 1;
+    else
+        param.sched_priority = min_prio;
+
+    sched_setscheduler(task_ptr,SCHED_FIFO,&param);
+
     // Setting C and T
     task_ptr->C = *C;
     task_ptr->T = *T;
 
-    printk(KERN_INFO "<TEAM09>: PID %d reserved C:%d T:%d \n",(int) tmp_pid, (int)task_ptr->C.tv_nsec,(int)task_ptr->T.tv_nsec);
+    printk(KERN_INFO "<TEAM09>: PID %d reserved C:%ld.%09ld\t T:%ld.%09ld Priority:%d\n",(int) tmp_pid, task_ptr->C.tv_sec, task_ptr->C.tv_nsec, task_ptr->T.tv_sec, task_ptr->T.tv_nsec, param.sched_priority);
 
     // Initializing timer, setting callback function, and starting the timer
     hrtimer_init(&task_ptr->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_PINNED);
@@ -103,7 +145,7 @@ SYSCALL_DEFINE3(set_rsv, pid_t, pid, struct timespec* , C, struct timespec*, T){
 
     hrtimer_start(&task_ptr->timer, timespec_to_ktime(task_ptr->T), HRTIMER_MODE_REL_PINNED);
     task_ptr->time_stamp = ktime_to_timespec(ktime_get());
-//    printk(KERN_INFO "<TEAM09> PID: %d started the timer \n",(int) tmp_pid);
+    //    printk(KERN_INFO "<TEAM09> PID: %d started the timer \n",(int) tmp_pid);
 
     return 0;
 }

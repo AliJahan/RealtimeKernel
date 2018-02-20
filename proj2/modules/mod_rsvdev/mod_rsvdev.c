@@ -86,7 +86,7 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
     strcat(message, header);
     size_of_message = 0;
     for_each_process_thread(g, p) {
-        if (p->C.tv_nsec !=0 ){
+        if ((p->C.tv_nsec !=0 ) || (p->C.tv_sec !=0 )){
             sprintf(tempString, "%d\t %d\t %d\t %s\n", p->pid, p->tgid, p->prio, p->comm);
             strcat(message, tempString);
         }
