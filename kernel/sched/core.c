@@ -3337,8 +3337,11 @@ static void __sched notrace __schedule(bool preempt)
 	struct pin_cookie cookie;
 	struct rq *rq;
 	int cpu;
-    struct timespec diff_time; //<TEAM09/>
-
+	//<TEAM09/>
+	struct timespec diff_time;
+	struct timespec current_time;
+	current_time = ktime_to_timespec(ktime_get());
+    //</TEAM09>
 
 	cpu = smp_processor_id();
 	rq = cpu_rq(cpu);
@@ -3399,14 +3402,15 @@ static void __sched notrace __schedule(bool preempt)
 	    prev->exec_time.tv_nsec = 0;
 	    atomic_set(&prev->reset,0);
 	}
-	// Computing
+	// updating TIME_STAMP and EXEC_TIME
     if(prev->C.tv_sec !=0 || prev->C.tv_nsec !=0 || prev->T.tv_sec !=0 || prev->T.tv_nsec !=0 ){
-        diff_time = timespec_sub(ktime_to_timespec(ktime_get()), prev->time_stamp );
+        diff_time = timespec_sub(current_time, prev->time_stamp );
         prev->exec_time = timespec_add(prev->exec_time, diff_time);
     }
 
+    current_time = ktime_to_timespec(ktime_get());
     if(next->C.tv_sec !=0 || next->C.tv_nsec !=0 || next->T.tv_sec !=0 || next->T.tv_nsec !=0 ){
-        next->time_stamp = ktime_to_timespec(ktime_get());
+        next->time_stamp = current_time;
     }
     //</TEAM09>
 

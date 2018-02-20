@@ -27,14 +27,28 @@ enum hrtimer_restart wake_upp(struct hrtimer *timer)
     long exec_time_us;
     long T_us=0.0;
     long util;
-    printk(KERN_INFO "<TEAM09>: exec time(s):%ld.%ld\t C(s):%ld.%ld \n", timer->t->exec_time.tv_sec, timer->t->exec_time.tv_nsec, timer->t->C.tv_sec, timer->t->C.tv_nsec);
+    struct siginfo info;
+
     // Checking if there is a task overrun
     if((timer->t->exec_time.tv_sec > timer->t->C.tv_sec) || ((timer->t->exec_time.tv_sec == timer->t->C.tv_sec) && (timer->t->exec_time.tv_nsec > timer->t->C.tv_nsec))){
+
+        // converting execution and Period time in microseconds
         exec_time_us =  (timer->t->exec_time.tv_sec)*1000000 + (timer->t->exec_time.tv_nsec)/1000;
         T_us =  (timer->t->T.tv_sec)*1000000 + (timer->t->T.tv_nsec)/1000;
+
+        // computing overrun utilization
         util = (exec_time_us*100)/T_us;
 
+        //
+        printk(KERN_INFO "<TEAM09>: exec time(s):%ld.%09ld\t C(s):%ld.%09ld \n", timer->t->exec_time.tv_sec, timer->t->exec_time.tv_nsec, timer->t->C.tv_sec, timer->t->C.tv_nsec);
         printk(KERN_INFO "<TEAM09>: Task %s (%d): budget overrun (util: %ld%%)\n", timer->t->comm, (int)timer->t->pid, util);
+
+        // Sending SIGUSR1 signal to the thread
+        memset(&info, 0, sizeof(struct siginfo));
+        info.si_signo = SIGUSR1;
+        if (send_sig_info(SIGUSR1, &info, timer->t) < 0) {
+            printk(KERN_INFO "<TEAM09>: sending SIGUSR1 failed\n");
+        }
     }
 
     // RESET flag is set here to reset EXEC_TIME in scheduler

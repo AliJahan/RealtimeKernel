@@ -1724,10 +1724,7 @@ static __latent_entropy struct task_struct *copy_process(
 	/* ok, now we should be set up.. */
 	p->pid = pid_nr(pid);
 	//<TEAM09/>+
-	/*
-	 * initializing C and T in order to check them on
-	 * cancel_rsv and set_rsv
-	 */
+	// initializing C and T in order to check them on cancel_rsv and set_rsv
 	p->C.tv_nsec = 0;
 	p->C.tv_sec = 0;
 	p->T.tv_nsec = 0;
