@@ -1608,6 +1608,7 @@ struct task_struct {
 	//<TEAM09/>
 	struct timespec C;
     struct timespec T;
+    unsigned int cpu_no;
     //</TEAM09>+
 
 #ifdef CONFIG_CC_STACKPROTECTOR
