@@ -1608,10 +1608,6 @@ struct task_struct {
 	//<TEAM09/>
 	struct timespec C;
     struct timespec T;
-    struct hrtimer timer;
-    struct timespec exec_time;
-    struct timespec time_stamp;
-    atomic_t reset;
     //</TEAM09>+
 
 #ifdef CONFIG_CC_STACKPROTECTOR

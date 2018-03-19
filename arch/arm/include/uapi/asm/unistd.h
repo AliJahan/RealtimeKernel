@@ -425,7 +425,6 @@
 #define __NR_pkey_free			(__NR_SYSCALL_BASE+396)
 #define __NR_set_rsv			(__NR_SYSCALL_BASE+397)	//<TEAM09/>+
 #define __NR_cancel_rsv         (__NR_SYSCALL_BASE+398) //<TEAM09/>+
-#define __NR_wait_until_next_period        (__NR_SYSCALL_BASE+399) //<TEAM09/>+
 /*
  * The following SWIs are ARM private.
  */

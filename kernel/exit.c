@@ -730,38 +730,6 @@ void __noreturn do_exit(long code)
 	struct task_struct *tsk = current;
 	int group_dead;
 
-	//<TEAM09/>
-    struct task_struct* g;
-    struct task_struct* p;
-
-    struct sched_param param;//
-    short decrease_others = 1;
-
-	if(tsk->C.tv_sec !=0 || tsk->C.tv_nsec !=0 || tsk->T.tv_sec !=0 || tsk->T.tv_nsec !=0 ){
-	    //Reset Priority
-	    for_each_process_thread(g, p){
-	        if ((p != tsk) && ((p->T.tv_nsec > 0) || (p->T.tv_sec > 0))){
-	            if (((tsk->T.tv_sec == p->T.tv_sec) && (tsk->T.tv_nsec == p->T.tv_nsec)))
-	                decrease_others = 0;
-	        }
-	    }
-
-	    if (decrease_others==1){
-	        for_each_process_thread(g, p){
-	            if ((p->T.tv_nsec > 0) || (p->T.tv_sec > 0))
-	            {
-	                if(tsk->rt_priority < p->rt_priority){
-	                    param.sched_priority = p->rt_priority - 1;
-	                    sched_setscheduler(p,SCHED_FIFO,&param);
-	                }
-	            }
-	        }
-	    }
-	    //Cancel timer
-	    hrtimer_cancel(&tsk->timer);
-	    printk(KERN_INFO "<TEAM09>: Reservation for PID %d has been canceled in EXIT()\n",(int)tsk->pid);
-	}
-	//</TEAM09>
 	TASKS_RCU(int tasks_rcu_i);
 
 	profile_task_exit(tsk);

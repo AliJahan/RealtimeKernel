@@ -3337,11 +3337,6 @@ static void __sched notrace __schedule(bool preempt)
 	struct pin_cookie cookie;
 	struct rq *rq;
 	int cpu;
-	//<TEAM09/>
-	struct timespec diff_time;
-	struct timespec current_time;
-	current_time = ktime_to_timespec(ktime_get());
-    //</TEAM09>
 
 	cpu = smp_processor_id();
 	rq = cpu_rq(cpu);
@@ -3394,25 +3389,6 @@ static void __sched notrace __schedule(bool preempt)
 		update_rq_clock(rq);
 
 	next = pick_next_task(rq, prev, cookie);
-
-	//<TEAM09/>
-	// the EXEC_TIME should be reset at the begining of each period (the reset flag is set by TIMER)
-	if(atomic_read(&prev->reset)){
-	    prev->exec_time.tv_sec = 0;
-	    prev->exec_time.tv_nsec = 0;
-	    atomic_set(&prev->reset,0);
-	}
-	// updating TIME_STAMP and EXEC_TIME
-    if(prev->C.tv_sec !=0 || prev->C.tv_nsec !=0 || prev->T.tv_sec !=0 || prev->T.tv_nsec !=0 ){
-        diff_time = timespec_sub(current_time, prev->time_stamp );
-        prev->exec_time = timespec_add(prev->exec_time, diff_time);
-    }
-
-    current_time = ktime_to_timespec(ktime_get());
-    if(next->C.tv_sec !=0 || next->C.tv_nsec !=0 || next->T.tv_sec !=0 || next->T.tv_nsec !=0 ){
-        next->time_stamp = current_time;
-    }
-    //</TEAM09>
 
 	clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
