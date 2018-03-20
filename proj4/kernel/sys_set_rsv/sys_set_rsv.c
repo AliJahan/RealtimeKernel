@@ -181,7 +181,7 @@ SYSCALL_DEFINE4(set_rsv, pid_t, pid, struct timespec* , C, struct timespec*, T, 
 
     task_ptr->cpu_no = cpuid_selected;
 
-    printk(KERN_INFO "<TEAM09>: PID %d reserved C:%ld.%09ld\t T:%ld.%09ld on CPU %d with Utilization: %d Partitioning policy: %s\n",(int) intended_pid, task_ptr->C.tv_sec, task_ptr->C.tv_nsec, task_ptr->T.tv_sec, task_ptr->T.tv_nsec, cpuid_selected, cpus_utilization[cpuid_selected], partition_policy);
+    printk(KERN_INFO "<TEAM09>: PID %d reserved C:%ld.%09ld\t T:%ld.%09ld on CPU %d with Utilization: %d Partitioning policy: %s\n",(int) intended_pid, task_ptr->C.tv_sec, task_ptr->C.tv_nsec, task_ptr->T.tv_sec, task_ptr->T.tv_nsec, cpuid_selected, cpus_utilization[cpuid_selected]/100, partition_policy);
 
     return 0;
 }
